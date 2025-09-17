@@ -6,7 +6,7 @@ import MainDashboard from "./components/MainDashboard";
 import MakeBooking from "./components/pages/MakeBooking";
 import NewBooking from "./components/pages/NewBooking";
 import NewParty from "./components/pages/NewParty";
-import NewCompany from "./components/pages/newCompany";
+import NewCompany from "./components/pages/NewCompany";
 import NewFunction from "./components/pages/NewFunction";
 import AddNewFunction from "./components/pages/AddNewFunction";
 import NewServing from "./components/pages/NewServing";
