@@ -1,7 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IoSearch } from "react-icons/io5";
 import { TiArrowBackOutline } from "react-icons/ti";
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button
+} from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 
 function NewParty() {
@@ -26,50 +33,75 @@ function NewParty() {
   // Dialog state
   const [openConfirm, setOpenConfirm] = useState(false);
 
+  // 🔹 Prefill from SearchParty selection
+  useEffect(() => {
+    const storedParty = sessionStorage.getItem("selectedParty");
+    if (storedParty) {
+      const p = JSON.parse(storedParty);
+      setPartyName({
+        partyName: p.LedgerName || "",
+        contactPerson1: p.MobileNo || "",
+        contactPerson2: "",
+        email: p.EmailId || "",
+        address: [p.Address_line1, p.Address_line2].filter(Boolean).join(", "),
+        zipcode: p.Zipcode || "",
+        country: p.Country || "",
+        city: p.City || "",
+        state: p.State || "",
+        alternateContact1: "",
+        alternateContact2: "",
+        alternateEmail: ""
+      });
+    }
+  }, []);
+
   // Handle input changes
   const partyNameChange = (e) => {
     const { name, value } = e.target;
     setPartyName(prev => ({ ...prev, [name]: value }));
   };
 
-  // Handle form submit
+  // 🔹 Save & return
   const HandleParty = (e) => {
     e.preventDefault();
 
-    // 🔹 Get current bookingData from sessionStorage
+    let bookingData = {};
     const stored = sessionStorage.getItem("bookingData");
-    let bookingData = stored ? JSON.parse(stored) : {};
+    if (stored) bookingData = JSON.parse(stored);
 
-    // 🔹 Merge full party info inside bookingData.customer
     bookingData = {
       ...bookingData,
       customer: {
         ...(bookingData.customer || {}),
-        ...partyName,
+        partyName: partyName.partyName,
+        phone: partyName.contactPerson1,
+        altPhone: partyName.contactPerson2,
+        email: partyName.email,
+        address: partyName.address,
+        city: partyName.city,
+        state: partyName.state,
+        country: partyName.country,
+        zipcode: partyName.zipcode,
+        alternateContact1: partyName.alternateContact1,
+        alternateContact2: partyName.alternateContact2,
+        alternateEmail: partyName.alternateEmail,
       },
     };
 
-    // 🔹 Save updated bookingData back
     sessionStorage.setItem("bookingData", JSON.stringify(bookingData));
+    sessionStorage.removeItem("selectedParty"); // clear temp selection
 
-    console.log("Saved Party:", partyName);
-    // 🔹 Navigate back to booking page
+    console.log("✅ Saved Party:", bookingData.customer);
     navigate("/new-booking");
   };
 
   // Back button handlers
-  const handleBackClick = () => {
-    setOpenConfirm(true);
-  };
-
+  const handleBackClick = () => setOpenConfirm(true);
   const handleConfirm = () => {
     setOpenConfirm(false);
     navigate('/new-booking');
   };
-
-  const handleCancel = () => {
-    setOpenConfirm(false);
-  };
+  const handleCancel = () => setOpenConfirm(false);
 
   return (
     <>
@@ -78,7 +110,7 @@ function NewParty() {
         <button type="button" onClick={handleBackClick}>
           <TiArrowBackOutline size={44} />
         </button>
-        <h1>New Party</h1>
+        <h1>         &nbsp;  &nbsp;  Party</h1>
       </div>
 
       {/* Confirmation Dialog */}
@@ -109,12 +141,12 @@ function NewParty() {
               required
               autoFocus
             />
-            <div className="search-logo">
-              <IoSearch size={40} />
+            <div className="search-logo" onClick={() => navigate("/search-party")}>
+              <IoSearch size={40} style={{ cursor: "pointer" }} />
             </div>
           </div>
 
-          <label htmlFor='contact person'>Contact Person</label>
+          <label>Contact Person</label>
           <div className="numbers">
             <span>+91</span>
             <input
@@ -131,7 +163,7 @@ function NewParty() {
             <span>+91</span>
             <input
               type="tel"
-              placeholder="Contact Person"
+              placeholder="Contact Person 2"
               name='contactPerson2'
               value={partyName.contactPerson2}
               onChange={partyNameChange}
@@ -163,9 +195,27 @@ function NewParty() {
           />
 
           <div className="country-state-city">
-            <input type="text" placeholder="Country" name='country' value={partyName.country} onChange={partyNameChange} />
-            <input type="text" placeholder="City" name='city' value={partyName.city} onChange={partyNameChange} />
-            <input type="text" placeholder="State" name='state' value={partyName.state} onChange={partyNameChange} />
+            <input
+              type="text"
+              placeholder="Country"
+              name='country'
+              value={partyName.country}
+              onChange={partyNameChange}
+            />
+            <input
+              type="text"
+              placeholder="City"
+              name='city'
+              value={partyName.city}
+              onChange={partyNameChange}
+            />
+            <input
+              type="text"
+              placeholder="State"
+              name='state'
+              value={partyName.state}
+              onChange={partyNameChange}
+            />
           </div>
 
           <hr />
@@ -202,7 +252,7 @@ function NewParty() {
             />
           </div>
 
-          <button type='submit'>Save</button>
+          <button type='submit' style={{ background: "#4CAF50", color: "white", padding: "10px 30px", border: "none", borderRadius: "5px", cursor: "pointer" }}>Save</button>
         </form>
       </div>
     </>

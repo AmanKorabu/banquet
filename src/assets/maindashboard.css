@@ -3,11 +3,11 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    
+
 }
 
 body {
-    background-color: rgba(179, 173, 173, 0.441);
+    background-color: rgba(26, 91, 119, 0.22);
     font-family: 'Times New Roman', Times, serif;
 }
 
@@ -118,17 +118,17 @@ body.sidebar-open::before {
 
 .event-item {
     aspect-ratio: 3/1.5;
-    background: rgb(255, 255, 255);
+    background: #1e293b;
     /* border: 5px solid #26232e97; */
     border-radius: 10px;
-    /* outline: 2px solid rgb(11, 11, 11); */
+    /* outline: 1px solid rgb(11, 11, 11); */
     outline-offset: 2px;
     width: 375px;
     padding: 45px;
     margin: 10px;
     display: flex;
     align-items: center;
-    box-shadow: 2px 1px 2px rgba(0, 0, 0, 1);
+    box-shadow: 2px 1px 20px rgba(0, 0, 0, 1);
     flex-direction: column;
     justify-content: center;
 
@@ -139,6 +139,7 @@ body.sidebar-open::before {
     /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
     font-size: 23px;
     color: rgb(14, 14, 15);
+    color: white;
     /* font-weight: bold; */
 }
 
@@ -159,10 +160,10 @@ body.sidebar-open::before {
 .event-item.highlight {
     color: rgb(24, 22, 22);
     overflow: unset;
-    border: 3px solid rgba(99, 97, 101, 0.617);
+    border: 3px solid rgba(255, 255, 0, 0.617);
     font-size: large;
     aspect-ratio: 2/1;
-    background: linear-gradient(135deg, #253756, #263b51, #e2e1dd);
+    background: linear-gradient(135deg, #1e293b, #1e293b, #a58a1f);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     color: white;
 }
@@ -182,7 +183,7 @@ body.sidebar-open::before {
 }
 
 .buttonContainer button {
-    background: linear-gradient(135deg, #000000, #2e7aac);
+    /* background: linear-gradient(135deg, #000000, #2e7aac); */
     color: white;
     border: 1px solid black;
     border-radius: 5px;
@@ -191,6 +192,7 @@ body.sidebar-open::before {
     cursor: pointer;
     transition: background 0.3s;
 }
+
 
 @media screen and (max-width: 708px) {
     .buttonContainer button {
@@ -203,10 +205,20 @@ body.sidebar-open::before {
         transition: background 0.3s;
     }
 }
-
-.buttonContainer button:hover {
-    background: linear-gradient(135deg, #764ba2, #667eea);
+.buttonContainer .reset-button {
+    background: rgb(244, 67, 54);
 }
+.buttonContainer .reset-button:hover {
+    background: rgb(223, 39, 6);
+}
+.buttonContainer .save-button {
+    background: rgb(12, 196, 46);
+}
+.buttonContainer .save-button:hover {
+    background: rgb(34, 139, 34);
+}
+
+
 
 .buttonContainer button:active {
     transform: scale(0.95);
@@ -266,7 +278,7 @@ body.sidebar-open::before {
     
 } */
 .formContainer {
-    position:relative;
+    position: relative;
     padding: 5px;
     top: 80px;
     border: 1px solid #ccc;
@@ -280,6 +292,7 @@ body.sidebar-open::before {
 .datetime {
     display: flex;
     /* flex-direction: column; */
+    justify-content: space-around;
     margin-top: 10px;
     gap: 20px;
 }
@@ -355,19 +368,16 @@ body.sidebar-open::before {
 }
 
 @media screen and (max-width: 768px) {
-
     .booking-date,
     .booking-to {
         flex-direction: column;
         width: 150px;
     }
-
     .pickers {
         flex-direction: row;
         justify-content: center;
         width: 100%;
     }
-
     #attended select {
         width: 100%;
     }
@@ -382,10 +392,15 @@ body.sidebar-open::before {
     border: 1px solid black;
     padding: 7px;
     border-radius: 5px;
+    cursor: pointer;
 }
 
 .party-name .logo {
     margin-right: 10px;
+}
+
+.party-name:hover {
+    background: #eee;
 }
 
 .new-party-container {
@@ -395,7 +410,7 @@ body.sidebar-open::before {
     flex-direction: column;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     margin: 10px;
-    gap: 10px;
+    gap: 50px;
 }
 
 .new-party-container form {
@@ -416,7 +431,7 @@ body.sidebar-open::before {
         gap: 5px;
 
         & .search-logo {
-            /* border: 1px solid #0e0d0d; */
+            border: none;
             padding: 5px;
             cursor: pointer;
         }
@@ -590,14 +605,16 @@ body.sidebar-open::before {
 .add-more {
     position: relative;
     right: 400px;
-    border: 1px solid black;
+    border: 2px solid rgb(38, 47, 230);
     padding: 4px 14px;
     border-radius: 5px;
     cursor: pointer;
 }
 
+
 .add-more:hover {
-    background: #eee;
+    background: #350dd2;
+    color: white;
 }
 
 .add-more:active {
@@ -608,7 +625,9 @@ body.sidebar-open::before {
 .add-more span {
     color: black;
 }
-
+.newBooking{
+    background-color: red;
+}
 @media screen and (max-width: 900px) {
     .add-more {
         right: 200px;
@@ -693,7 +712,9 @@ body.sidebar-open::before {
 }
 
 .min-maxppl input {
-    padding: 20px;
+    padding: 5px;
+    border-radius: 5em;
+
 }
 
 @media screen and (max-width: 768px) {
@@ -753,7 +774,7 @@ body.sidebar-open::before {
 }
 
 .itemsSection input {
-    padding: 15px;
+    padding: 8px;
     width: 100%;
     margin: auto;
 }
@@ -788,7 +809,7 @@ body.sidebar-open::before {
     font-weight: bold;
     color: rgb(255, 255, 255);
     cursor: pointer;
-    padding: 15px 40px;
+    padding: 5px 30px;
     border-radius: 5px;
     background-color: #4f7df1;
 }
@@ -914,3 +935,49 @@ body.sidebar-open::before {
     font-weight: bold;
     background-color: #f5f5f5;
 }
+/* 🌟 Professional Input Fields */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+input[type="password"],
+textarea,
+select {
+  width: 100%;
+  padding: 10px 14px;
+  /* margin: 8px 0 16px 0; */
+  border: 1px solid #7b98bc; /* neutral gray */
+  border-radius: 6px;
+  font-size: 15px;
+  background-color: #fff;
+  transition: all 0.2s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* Focus state */
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #22ba8a; /* blue-600 */
+  box-shadow: 0 0 0 3px rgba(76, 58, 176, 0.25);
+}
+
+/* Placeholder styling */
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+/* Disabled fields */
+input:disabled,
+textarea:disabled,
+select:disabled {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Labels for inputs */
+

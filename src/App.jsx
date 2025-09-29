@@ -12,6 +12,7 @@ import AddNewFunction from "./components/pages/AddNewFunction";
 import NewServing from "./components/pages/NewServing";
 import Items from "./components/pages/Items";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PartySearch from "./components/pages/PartySearch";
 
 function App() {
   return (
@@ -59,6 +60,14 @@ function App() {
           element={
             <ProtectedRoute>
               <NewParty />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/search-party"
+          element={
+            <ProtectedRoute>
+              <PartySearch />
             </ProtectedRoute>
           }
         />

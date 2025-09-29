@@ -6,15 +6,19 @@ function MakeBooking() {
     const btnContainer = [
         {
             title: 'New Booking',
-            url: '/new-booking'
+            url: '/new-booking',
+            style: { backgroundColor: '#2b2c3eff' },
         },
+
         {
             title: 'Billed Quotations',
-            url: '/billed-quotations'
+            url: '/billed-quotations',
+            style: { backgroundColor: '#2b2c3eff' },
         },
         {
             title: 'View Deleted',
-            url: '/view-deleted'
+            url: '/view-deleted',
+            style: { backgroundColor: '#2b2c3eff' }
         }
     ]
     const navigate = useNavigate();
@@ -28,7 +32,7 @@ function MakeBooking() {
             <Header />
             <div className="buttonContainer">
                 {btnContainer.map((btn, index) => (
-                    <button key={index} onClick={() => handleButtonClick(btn.url)}>{btn.title}</button>
+                    <button key={index} onClick={() => handleButtonClick(btn.url)} style={btn.style}>{btn.title}</button>
                 ))}
             </div>
         </>

@@ -16,6 +16,7 @@ import {
     DialogTitle,
     Button,
 } from "@mui/material";
+import axios from "axios";
 function NewBooking() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -590,55 +591,82 @@ function NewBooking() {
     };
     useEffect(() => {
         const hotelId = localStorage.getItem("hotel_id");
-        console.log("Hotel ID:", hotelId);
+        console.log("📌 Hotel ID in NewBooking:", hotelId);
+
+        if (!hotelId) {
+            toast.error("⚠️ No hotel ID found. Please login again.");
+            navigate("/login");
+        }
     }, []);
+
     // ---- Fetch Helpers ------------------------------------------------------
+    // Fetch server date using the proxy
+    
+    
+    
+
+    // Fetch server date using hotel_id from localStorage
     const fetchWithHotelId = async () => {
         const hotelId = localStorage.getItem("hotel_id");
-        if (!hotelId) throw new Error("No hotel_id found in localStorage");
+        if (!hotelId) {
+            throw new Error("No hotel_id found in localStorage");
+        }
 
-        const formData = new FormData();
-        formData.append("hotel_id", hotelId);
+        try {
+            const response = await axios.post("/banquetapi/get_server_date.php", null, {
+                params: { hotel_id: hotelId },
+            });
 
-        const response = await fetch(`http://52.66.71.147/banquetapi/get_server_date.php?hotel_id=${hotelId}`, {
-            method: "POST",
-            body: formData,
-        });
-        if (!response.ok) throw new Error("Network error");
-        return response.json();
-
+            if (response.status === 200 && response.data) {
+                return response.data;
+            } else {
+                throw new Error("Failed to fetch server date.");
+            }
+        } catch (error) {
+            console.error("Error fetching server date:", error);
+            throw error;
+        }
     };
+
+    // Fetch statuses using hotel_id from localStorage
     const fetchStatuses = async () => {
         const hotelId = localStorage.getItem("hotel_id");
-        if (!hotelId) throw new Error("No hotel_id found in localStorage");
+        if (!hotelId) {
+            throw new Error("No hotel_id found in localStorage");
+        }
 
-        const formData = new FormData();
-        formData.append("hotel_id", hotelId);
-        formData.append("search_param", "");  // empty = get all
-        formData.append("para", "single_quot");
+        try {
+            const response = await axios.post("/banquetapi/search_status.php", null, {
+                params: {
+                    hotel_id: hotelId,
+                    search_param: "",  // Empty search_param to get all statuses
+                    para: "single_quot",
+                },
+            });
 
-        const response = await fetch(`http://52.66.71.147/banquetapi/search_status.php?hotel_id=${hotelId}`, {
-            method: "POST",
-            body: formData,
-        });
-
-        if (!response.ok) throw new Error("Network error");
-        return response.json();
+            if (response.status === 200 && response.data) {
+                return response.data;
+            } else {
+                throw new Error("Failed to fetch statuses.");
+            }
+        } catch (error) {
+            console.error("Error fetching statuses:", error);
+            throw error;
+        }
     };
 
-    // ---- Load API Data ------------------------------------------------------
+    // ---- Load API Data Inside useEffect ------------------------------------------------------
     useEffect(() => {
         const loadData = async () => {
-            // 4. Statuses
-            const statusData = await fetchStatuses();
-            if (Array.isArray(statusData.result)) {
-                setStatuses(statusData.result);
-            }
-
             try {
-                const data = await fetchWithHotelId();
+                // Fetch status data
+                const statusData = await fetchStatuses();
+                if (Array.isArray(statusData.result)) {
+                    setStatuses(statusData.result);  // Store statuses in state
+                }
 
-                // 1. Server date
+                // Fetch server date data
+                const data = await fetchWithHotelId();
                 if (data.result?.[0]?.ServerDate) {
                     const serverDate = dayjs(data.result[0].ServerDate, "DD-MM-YYYY");
                     setBookingData((prev) => ({
@@ -652,22 +680,23 @@ function NewBooking() {
                     }));
                 }
 
-                // 2. Companies
+                // Fetch additional data like billing companies and attendees
                 if (Array.isArray(data.result2)) {
-                    setBillingCompanies(data.result2);
+                    setBillingCompanies(data.result2);  // Store billing companies in state
                 }
 
-                // 3. Users
                 if (Array.isArray(data.result3)) {
-                    setAttendees(data.result3);
+                    setAttendees(data.result3);  // Store attendees in state
                 }
+
             } catch (err) {
                 console.error("Error fetching API data:", err);
+                toast.error("Failed to fetch data. Please try again.");
             }
         };
 
         loadData();
-    }, []);
+    }, []);  // This effect runs only once when the component mounts
 
 
     return (
@@ -719,9 +748,7 @@ function NewBooking() {
                                 ampm
                                 readOnly
                             />
-
                         </div>
-
                         {/* Billing Company */}
                         <div id="billing-companies">
                             <h3>Billing Company</h3>
@@ -846,7 +873,10 @@ function NewBooking() {
                             <div className="party-name" onClick={handleNewFunction} ref={functionNameRef}
                                 required>
                                 <span>{bookingData.customer.functionName || "No Function Selected"}</span>
+
                                 <AiFillEdit size={22} />
+
+
                                 <span className="add-more" onClick={addNewFunction}>
                                     more
                                 </span>
@@ -1119,11 +1149,11 @@ function NewBooking() {
                         </div>
                         {/* Buttons */}
                         <div className="buttonContainer">
-                            <button type="button" onClick={handleSaveClick}>Save Event</button>
+                            <button type="button" onClick={handleSaveClick} className="save-button">Save Event</button>
 
                             <button
                                 type="button"
-                                style={{ marginLeft: "10px", backgroundColor: "#f44336", color: "#fff" }}
+                                className="reset-button"
                                 onClick={handleReset}
                             >
                                 Reset

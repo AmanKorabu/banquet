@@ -8,10 +8,10 @@ import "../assets/form.css";
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // 👈 New state
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ Auto-redirect if user is already logged in
+  // ✅ Auto-redirect if already logged in
   useEffect(() => {
     const user = localStorage.getItem("user");
     if (user) {
@@ -23,11 +23,21 @@ const LoginForm = () => {
     e.preventDefault();
 
     try {
+      const apiUrl = `/banquetapi/user_login_new.php?${new URLSearchParams({ user_name: username, password: password })}`;  // This is the proxy URL
+
+      console.log("Logging in with:", username, password);
+
+      // Send request to the proxy URL
       const response = await axios.post(
-        `http://52.66.71.147/banquetapi/user_login_new.php?user_name=${username}&password=${password}`,
+        apiUrl,
+        new URLSearchParams({
+          user_name: username,
+          password: password,
+        }),
         {
-          u_name: username,
-          u_pass: password,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',  // Important for URLSearchParams
+          },
         }
       );
 
@@ -37,7 +47,18 @@ const LoginForm = () => {
         const user = response.data.result[0];
 
         if (user.u_name === username && user.u_pass === password) {
+          // ✅ Save full user object to localStorage
           localStorage.setItem("user", JSON.stringify(user));
+
+          // ✅ Save hotel_id separately
+          if (user.hotel_id || user.Hotelid) {
+            const hotelId = user.hotel_id || user.Hotelid;
+            localStorage.setItem("hotel_id", hotelId);
+            console.log("✅ Hotel ID saved:", hotelId);
+          } else {
+            console.warn("⚠️ hotel_id not found in API response");
+          }
+
           toast.success(`✅ Login successful! Welcome ${user.u_name}`);
           navigate("/dashboard");
         } else {
@@ -48,6 +69,11 @@ const LoginForm = () => {
       }
     } catch (err) {
       console.error("Login error:", err);
+      if (err.response) {
+        console.error("Response error data:", err.response.data);
+      } else {
+        console.error("Error message:", err.message);
+      }
       toast.error("⚠️ Server error, please try again later");
     }
   };
@@ -84,7 +110,7 @@ const LoginForm = () => {
               cursor: "pointer",
               color: "#007bff",
               fontSize: "14px",
-              userSelect: "none"
+              userSelect: "none",
             }}
           >
             {showPassword ? "Hide" : "Show"}

@@ -11,11 +11,11 @@ import '../assets/maindashboard.css'
 function MainDashboard() {
     const allEvents = [
         { id: 1, name: "Make Booking", img: <HiMiniPlusCircle size={35} color='gray' />, navigate: '/make-booking' },
-        { id: 2, name: "Bills", img: <FcPrint size={35} color='red' />, navigate: '/bills' },
-        { id: 3, name: "Calendar View", img: <FaCalendarDay size={35} color='red' />, navigate: '/calendar-view' },
-        { id: 4, name: "Unsettled Bills", img: <GiReceiveMoney size={35} color='green' />, navigate: '/unsettled-bills' },
-        { id: 5, name: "Upcoming Events", img: <PiCalendarStarFill size={35} color='orange' />, bgcolor: 'rgba(118, 131, 244, 0.44)', color: 'white', navigate: '/upcoming-events' },
-        { id: 6, name: "Balance Amount", img: <FaWallet size={40} color='white' />, bgcolor: 'rgba(118, 131, 244, 0.44)', color: 'white', amount: '₹ 50,000', navigate: '/balance-amount' },
+        { id: 2, name: "Bills", img: <FcPrint size={35} />, navigate: '/bills' },
+        { id: 3, name: "Calendar View", img: <FaCalendarDay size={35} color='gray' />, navigate: '/calendar-view' },
+        { id: 4, name: "Unsettled Bills", img: <GiReceiveMoney size={35} color='gray' />, navigate: '/unsettled-bills' },
+        { id: 5, name: "Upcoming Events", img: <PiCalendarStarFill size={35} color='gray' />, bgcolor: 'rgba(118, 131, 244, 0.44)', color: 'white', navigate: '/upcoming-events' },
+        { id: 6, name: "Balance Amount", img: <FaWallet size={35} color='gray' />, bgcolor: 'rgba(118, 131, 244, 0.44)', color: 'white', amount: '₹ 50,000', navigate: '/balance-amount' },
     ];
     const navigate = useNavigate();
     const handlePage = (event) => {
